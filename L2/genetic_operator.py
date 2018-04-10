@@ -36,3 +36,28 @@ def pmx(parent1, parent2):
     child1 = _copy_remaining(child1, parent1, parent2, chunk_start_idx, chunk_end_idx)
     child2 = _copy_remaining(child2, parent2, parent1, chunk_start_idx, chunk_end_idx)
     return child1, child2
+
+
+def _copy_remaining_ox(child, parent):
+    initial_child_set = set(child) - {-1}
+    l = len(child)
+    j = 0
+    for parent_element in parent:
+        while j < l and child[j] != -1:
+            j += 1
+        if parent_element not in initial_child_set:
+            child[j] = parent_element
+            j += 1
+    return child
+
+
+def ox(parent1, parent2):
+    n = len(parent1)
+    chunk_start_idx, chunk_end_idx = sorted([randrange(0, n), randrange(0, n)])
+    child1 = -np.ones(parent1.shape).astype(np.int64)
+    child2 = child1.copy()
+    child1[chunk_start_idx:chunk_end_idx] = parent2[chunk_start_idx:chunk_end_idx]
+    child2[chunk_start_idx:chunk_end_idx] = parent1[chunk_start_idx:chunk_end_idx]
+    child1 = _copy_remaining_ox(child1, parent1)
+    child2 = _copy_remaining_ox(child2, parent2)
+    return child1, child2
